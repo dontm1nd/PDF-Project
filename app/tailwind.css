@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply bg-white;
+}
+
+@keyframes plasmaMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.bg-gradient-animated {
+  background: linear-gradient(#474E93, #7E5CAD, #72BAA9, #D5E7B5);
+  background-size: 400% 400%;
+  animation: plasmaMove 20s ease-in-out infinite;
+}
