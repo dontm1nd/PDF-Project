@@ -1,11 +1,30 @@
-import { Form } from "@remix-run/react";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
+import { getUserFromSession, loginUser, createUserSession } from "~/utils/session";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUserFromSession(request);
+  if (user) return redirect("/dashboard"); // Bereits eingeloggt? Weiterleiten
+  return null;
+};
+
+// Test-User Daten
+const TEST_USER = {
+  email: "test@example.com",
+  password: "passwort123",
+  name: "Test Nutzer",
+};
 
 export default function Login() {
+  const actionData = useActionData<{ error?: string }>(); // Holt mögliche Fehlernachrichten
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-animated">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-gray-700">Login</h2>
+        {actionData?.error && (
+          <p className="text-red-500 text-center mt-2">{actionData.error}</p>
+        )}
         <Form method="post" className="mt-6">
           <div>
             <label className="block text-gray-700">E-Mail</label>
@@ -45,10 +64,20 @@ export async function action({ request }: ActionFunctionArgs) {
   const email = formData.get("email");
   const password = formData.get("password");
 
-  // Hier kannst du die Authentifizierung prüfen (z.B. mit einer Datenbank)
-  if (email === "test@example.com" && password === "passwort123") {
-    return redirect("/dashboard"); // Nach dem Login weiterleiten
+  /*
+  if (typeof email !== "string" || typeof password !== "string") {
+    return { error: "Ungültige Eingabedaten" }; // Validierung der Eingaben
   }
 
-  return { error: "Ungültige Zugangsdaten" };
+  const user = await loginUser(email, password); // Prüft den Benutzer
+
+  if (!user) {
+    return { error: "Ungültige Zugangsdaten" }; // Falls Login fehlschlägt
+  }
+  */
+  if (email === TEST_USER.email && password === TEST_USER.password) {
+    return createUserSession({ name: TEST_USER.name, email }, "/dashboard");
+  }
+
+  //return createUserSession(user, "/dashboard"); // Benutzer speichern & weiterleiten
 }

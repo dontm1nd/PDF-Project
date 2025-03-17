@@ -1,5 +1,16 @@
 import { useState } from "react";
 import { jsPDF } from "jspdf";
+import { LoaderFunction, redirect } from "@remix-run/node";
+import { getUserFromSession } from "~/utils/session";
+import { useLoaderData, Form } from "@remix-run/react";
+
+
+export const loader: LoaderFunction = async ({ request }) => {
+    const user = await getUserFromSession(request);
+    if (!user) return redirect("/login"); // Falls nicht eingeloggt, zurück zur Login-Seite
+    return { user };
+  };
+
 
 export default function ImageToPdfConverter() {
     const [images, setImages] = useState<string[]>([]);
@@ -70,6 +81,17 @@ export default function ImageToPdfConverter() {
                     Convert to PDF
                 </button>
             </div>
+
+
+            {/* Logout-Formular */}
+            <Form method="post" action="/logout">
+            <button
+                type="submit"
+                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+            >
+                Logout
+            </button>
+            </Form>
         </div>
     );
 }
