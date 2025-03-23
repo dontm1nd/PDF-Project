@@ -12,7 +12,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 const TEST_USER = {
   email: "test@example.com",
   password: "passwort123",
-  name: "Test Nutzer",
+  name: "TestNutzer",
 };
 
 export default function Login() {
