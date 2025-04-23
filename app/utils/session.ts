@@ -1,4 +1,6 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { db } from "~/utils/db.server";
+import bcrypt from "bcryptjs";
 
 // Session-Storage einrichten
 const sessionStorage = createCookieSessionStorage({
@@ -22,11 +24,21 @@ export async function getUserFromSession(request: Request) {
 
 // ✅ Nutzer einloggen (Session setzen)
 export async function loginUser(email: string, password: string) {
-  // ⚠️ Ersetze dies mit einer echten User-Authentifizierung (DB oder API)
-  if (email === "test@example.com" && password === "password123") {
-    return { id: 1, name: "Max Mustermann", email }; // Beispiel-User
-  }
-  return null;
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) return null;
+
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) return null;
+
+  return { id: user.id, name: user.name, email: user.email };
+}
+
+// ✅ Nutzer registrieren
+export async function registerUser(email: string, password: string, name: string) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  return db.user.create({
+    data: { email, password: hashedPassword, name },
+  });
 }
 
 // ✅ Nutzer in Session speichern

@@ -8,13 +8,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-// Test-User Daten
-const TEST_USER = {
-  email: "test@example.com",
-  password: "passwort123",
-  name: "TestNutzer",
-};
-
 export default function Login() {
   const actionData = useActionData<{ error?: string }>(); // Holt mögliche Fehlernachrichten!
 
@@ -61,23 +54,13 @@ export default function Login() {
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-  /*
-  if (typeof email !== "string" || typeof password !== "string") {
-    return { error: "Ungültige Eingabedaten" }; // Validierung der Eingaben
-  }
-
-  const user = await loginUser(email, password); // Prüft den Benutzer
-
+  const user = await loginUser(email, password);
   if (!user) {
-    return { error: "Ungültige Zugangsdaten" }; // Falls Login fehlschlägt
-  }
-  */
-  if (email === TEST_USER.email && password === TEST_USER.password) {
-    return createUserSession({ name: TEST_USER.name, email }, "/dashboard");
+    return { error: "Ungültige Zugangsdaten" };
   }
 
-  //return createUserSession(user, "/dashboard"); // Benutzer speichern & weiterleiten
+  return createUserSession(user, "/dashboard");
 }
