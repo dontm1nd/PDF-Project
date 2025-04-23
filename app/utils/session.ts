@@ -5,7 +5,7 @@ const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "auth_session", // Name des Cookies
     secure: process.env.NODE_ENV === "production", // In Production nur über HTTPS
-    secrets: ["super-secret-key"], // 🔒 Ersetze durch eine sichere Schlüssel
+    secrets: ["super-secret-key"], //Ersetze durch eine sichere Schlüssel
     sameSite: "lax",
     httpOnly: true,
     path: "/",
@@ -13,23 +13,23 @@ const sessionStorage = createCookieSessionStorage({
   },
 });
 
-// ✅ Nutzer aus Session abrufen
+//Nutzer aus Session abrufen
 export async function getUserFromSession(request: Request) {
   const session = await sessionStorage.getSession(request.headers.get("Cookie"));
   const user = session.get("user");
   return user ? user : null;
 }
 
-// ✅ Nutzer einloggen (Session setzen)
+//Nutzer einloggen (Session setzen)
 export async function loginUser(email: string, password: string) {
-  // ⚠️ Ersetze dies mit einer echten User-Authentifizierung (DB oder API)
+  //Ersetze dies mit einer echten User-Authentifizierung (DB oder API)
   if (email === "test@example.com" && password === "password123") {
     return { id: 1, name: "Max Mustermann", email }; // Beispiel-User
   }
   return null;
 }
 
-// ✅ Nutzer in Session speichern
+//Nutzer in Session speichern
 export async function createUserSession(user: any, redirectTo: string) {
   const session = await sessionStorage.getSession();
   session.set("user", user);
@@ -41,7 +41,7 @@ export async function createUserSession(user: any, redirectTo: string) {
   });
 }
 
-// ✅ Nutzer ausloggen
+//Nutzer ausloggen
 export async function logoutUser(request: Request) {
   const session = await sessionStorage.getSession(request.headers.get("Cookie"));
   return redirect("/login", {
