@@ -60,24 +60,21 @@ export default function Login() {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
+  const formData = new URLSearchParams(await request.text());
   const email = formData.get("email");
   const password = formData.get("password");
 
-  /*
-  if (typeof email !== "string" || typeof password !== "string") {
-    return { error: "Ungültige Eingabedaten" }; // Validierung der Eingaben
+  if (typeof email !== "string"|| typeof password !== "string"){
+    return { error: "Ungültige Eingaben" };// Validierung der Eingaben
   }
 
   const user = await loginUser(email, password); // Prüft den Benutzer
 
   if (!user) {
-    return { error: "Ungültige Zugangsdaten" }; // Falls Login fehlschlägt
-  }
-  */
-  if (email === TEST_USER.email && password === TEST_USER.password) {
-    return createUserSession({ name: TEST_USER.name, email }, "/dashboard");
+    return { error: "Ungültige E-Mail oder Passwort" }; // Fehler bei der Anmeldung
   }
 
-  //return createUserSession(user, "/dashboard"); // Benutzer speichern & weiterleiten
+  // Benutzer speichern und zum Dashboard weiterleiten
+  return createUserSession(user, "/dashboard");
+  
 }

@@ -1,4 +1,5 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { prisma } from "~/utils/db.server";
 
 // Session-Storage einrichten
 const sessionStorage = createCookieSessionStorage({
@@ -22,10 +23,14 @@ export async function getUserFromSession(request: Request) {
 
 //Nutzer einloggen (Session setzen)
 export async function loginUser(email: string, password: string) {
-  //Ersetze dies mit einer echten User-Authentifizierung (DB oder API)
-  if (email === "test@example.com" && password === "password123") {
-    return { id: 1, name: "Max Mustermann", email }; // Beispiel-User
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (user && user.password === password) {
+    return user;
   }
+
   return null;
 }
 
