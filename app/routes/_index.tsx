@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 
+// Weiterleitung zur Anmeldeseite
 export function loader({ request }: LoaderFunctionArgs) {
   return redirect("/login");
 }

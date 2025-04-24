@@ -13,18 +13,25 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 
 export default function ImageToPdfConverter() {
+
+    // Loader-Daten abrufen
     const [images, setImages] = useState<string[]>([]);
 
+    // Datei-Upload-Handler
+    //   Diese Funktion wird aufgerufen, wenn der Nutzer eine Datei auswählt
+    //   Sie erstellt eine Vorschau der ausgewählten Bilder und fügt sie dem Zustand hinzu
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) return;
         handleFiles(Array.from(event.target.files));
     };
 
+   
     const handleFiles = (files: File[]) => {
         const imagePreviews = files.map((file) => URL.createObjectURL(file));
         setImages((prev) => [...prev, ...imagePreviews]);
     };
 
+    
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.stopPropagation();

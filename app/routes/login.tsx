@@ -8,12 +8,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-// Test-User Daten
-const TEST_USER = {
-  email: "test@example.com",
-  password: "passwort123",
-  name: "TestNutzer",
-};
 
 export default function Login() {
   const actionData = useActionData<{ error?: string }>(); // Holt mögliche Fehlernachrichten!
@@ -59,6 +53,9 @@ export default function Login() {
   );
 }
 
+//Login Fukntion
+// Diese Funktion wird aufgerufen, wenn das Formular abgeschickt wird
+// Sie überprüft die Anmeldedaten und erstellt eine Benutzersitzung
 export async function action({ request }: ActionFunctionArgs) {
   const formData = new URLSearchParams(await request.text());
   const email = formData.get("email");
