@@ -1,14 +1,37 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import { prisma } from "~/utils/db.server";
 
+//Umgebungsvariablen aus .env holen
+const sessionSecret = process.env.SESSION_SECRET;
+const nodeEnv = process.env.NODE_ENV;
+const cookieSecureEnv = process.env.COOKIE_SECURE;
+
+if (!sessionSecret) {
+  throw new Error("SESSION_SECRET is not set");
+}
+
+if (!cookieSecureEnv) {
+  throw new Error("COOKIE_SECURE is not set");
+}
+
+// Bestimmen ob Cookie Secure
+const isProduction = nodeEnv === "production";
+const cookieSecure = isProduction ? cookieSecureEnv === "true" : false;
+
+// Log
+console.log("[SESSION CONFIG]");
+console.log(`NODE_ENV: ${nodeEnv}`);
+console.log(`COOKIE_SECURE (aus .env): ${cookieSecureEnv}`);
+console.log(`=> Cookie wird 'secure' gesetzt: ${cookieSecure}`);
+
 // Session-Storage einrichten
 // Diese Funktion erstellt eine Cookie-Session-Storage, die für die Authentifizierung verwendet wird
 // Sie speichert die Sitzung im Cookie und gibt sie zurück. Die Sitzung wird für 7 Tage gespeichert
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "auth_session", // Name des Cookies
-    secure: process.env.NODE_ENV === "production", // In Production nur über HTTPS
-    secrets: ["super-secret-key"], //Ersetze durch eine sichere Schlüssel
+    secure: cookieSecure,
+    secrets: [sessionSecret],
     sameSite: "lax",
     httpOnly: true,
     path: "/",
