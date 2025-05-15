@@ -25,13 +25,18 @@ export default function ImageToPdfConverter() {
         handleFiles(Array.from(event.target.files));
     };
 
-   
+    //   Diese Funktion wird aufgerufen, wenn der Nutzer Dateien per Drag & Drop hinzufügt
+    //   Sie erstellt eine Vorschau der hinzugefügten Bilder und fügt sie dem Zustand hinzu
+    //   Sie wird auch aufgerufen, wenn der Nutzer eine Datei auswählt
     const handleFiles = (files: File[]) => {
         const imagePreviews = files.map((file) => URL.createObjectURL(file));
         setImages((prev) => [...prev, ...imagePreviews]);
     };
 
     
+    //   Diese Funktion wird aufgerufen, wenn der Nutzer eine Datei per Drag & Drop hinzufügt
+    //   Sie erstellt eine Vorschau der hinzugefügten Bilder und fügt sie dem Zustand hinzu
+    //   Sie wird auch aufgerufen, wenn der Nutzer eine Datei auswählt
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -39,6 +44,8 @@ export default function ImageToPdfConverter() {
         handleFiles(Array.from(event.dataTransfer.files));
     };
 
+    //   Diese Funktion wird aufgerufen, wenn der Nutzer eine Datei per Drag & Drop hinzufügt
+    //   Sie erstellt eine Vorschau der hinzugefügten Bilder und fügt sie dem Zustand hinzu
     const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.stopPropagation();
